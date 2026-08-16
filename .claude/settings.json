@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(forge:*)",
+      "Bash(cast:*)",
+      "Bash(anvil:*)",
+      "Bash(go:*)",
+      "Bash(kurtosis:*)",
+      "Bash(op-node:*)",
+      "Bash(op-batcher:*)",
+      "Bash(op-proposer:*)",
+      "Bash(op-challenger:*)",
+      "Bash(slither:*)",
+      "Bash(git:*)",
+      "Read(**)",
+      "Grep(**)",
+      "Glob(**)"
+    ],
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*keystore*)",
+      "Bash(cast wallet import:*)"
+    ]
+  },
+  "env": {
+    "FOUNDRY_PROFILE": "default"
+  }
+}

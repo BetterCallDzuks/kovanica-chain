@@ -1,0 +1,13 @@
+{
+  "name": "toni-kovanica-marketplace",
+  "owner": {
+    "name": "Toni"
+  },
+  "plugins": [
+    {
+      "name": "kovanica-chain-toolkit",
+      "source": "./",
+      "description": "OP Stack rollup engineering toolkit: subagents, skills, and slash commands for node-stack engineering, bridge contracts, fault proofs, security audits, devnet ops, and L1 deployment."
+    }
+  ]
+}
