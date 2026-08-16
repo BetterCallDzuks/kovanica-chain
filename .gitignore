@@ -1,0 +1,30 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*keystore*
+
+# op-deployer state / downloaded devnet artifacts
+.deployer/
+devnet/out/
+
+# Cannon prestate build artifacts (regenerate from the pinned op-program tag)
+devnet/static_files/prestates/*.json
+devnet/static_files/prestates/*.bin.gz
+!devnet/static_files/prestates/README.md
+!devnet/static_files/prestates/.gitkeep
+
+# Foundry (contracts package, added later)
+out/
+cache/
+broadcast/**/dry-run/
+
+# Go
+*.test
+*.out
+bin/
+
+# Editor / OS
+.DS_Store
+*.swp

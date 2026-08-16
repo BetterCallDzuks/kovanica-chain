@@ -1,0 +1,73 @@
+# kovanica-chain — local Kurtosis devnet (Stage 1: fault-proof local devnet)
+#
+# Full L1 + L2 + node stack with PERMISSIONLESS fault proofs enabled, plus an
+# op-challenger, run via the ethpandaops optimism-package under Kurtosis.
+#
+#   kurtosis run github.com/ethpandaops/optimism-package \
+#     --args-file ./devnet/network_params.yaml \
+#     --enclave kovanica-devnet
+#
+# Schema notes (verified against the optimism-package README — do not "fix"
+# these, they are intentional):
+#   * `challengers:` is a top-level key under `optimism_package`, a sibling of
+#     `chains`. A challenger is auto-started for every entry with `enabled: true`.
+#   * The proposal-interval field is literally spelled `proposal_internal` in the
+#     package README. Keep the typo verbatim or it is ignored.
+#   * `game_type: 0` selects the permissionless CANNON FaultDisputeGame. The
+#     package DEFAULTS to `1` (PermissionedDisputeGame) — you MUST set 0 to
+#     exercise the permissionless system that finalizes real withdrawals.
+#   * Fork-timer overrides go under `op_contract_deployer_params.
+#     global_deploy_overrides` — there is no `additional_deploy_overrides` key.
+#
+# See devnet/README.md for the deposit -> withdraw -> prove -> finalize loop
+# and the absolute-prestate regeneration step (Stage 1b) that must be done
+# before the challenger can actually play games.
+
+optimism_package:
+  chains:
+    kovanica:
+      participants:
+        node0:
+          el:
+            type: op-geth
+          cl:
+            type: op-node
+      network_params:
+        # Devnet-only L2 chain id. A public testnet gets its own registered id.
+        network_id: "2900"
+        seconds_per_slot: 2
+      proposer_params:
+        game_type: 0            # 0 = permissionless CANNON FaultDisputeGame
+        proposal_internal: 10m  # verbatim spelling — see note above
+
+  challengers:
+    kovanica-challenger:
+      enabled: true
+      participants: "*"         # connect to every L2 node in the chain
+      cannon_prestates_path: "static_files/prestates"
+      datadir: "/data/op-challenger/op-challenger-data"
+
+  op_contract_deployer_params:
+    # Pin op-deployer and the op-contracts tag together — each op-deployer minor
+    # release supports exactly one governance-approved contracts release.
+    image: us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.4.2
+    l1_artifacts_locator: tag://op-contracts/v4.0.0
+    l2_artifacts_locator: tag://op-contracts/v4.0.0
+    global_deploy_overrides:
+      # Devnet-shortened dispute/finalization timers so a full withdrawal round
+      # trip finishes in minutes, not days. NOT for any public network.
+      faultGameWithdrawalDelay: 3600
+      disputeGameFinalityDelaySeconds: 3600
+      proofMaturityDelaySeconds: 3600
+      faultGameMaxClockDuration: 1200
+      faultGameClockExtension: 0
+      # PLACEHOLDER — regenerate for kovanica's genesis/rollup (Stage 1b) and
+      # replace with the printed Cannon64 hash. This value MUST equal the hash
+      # of the prestate file the challenger serves from cannon_prestates_path,
+      # or the challenger refuses to play and withdrawals never finalize.
+      faultGameAbsolutePrestate: "0x03c7ae758795765c6664a5d39bf63841c71ff191e9189522bad8ebff5d4eca98"
+
+ethereum_package:
+  network_params:
+    preset: minimal
+    genesis_delay: 5
