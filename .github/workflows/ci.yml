@@ -45,6 +45,9 @@ jobs:
         run: |
           for s in scripts/*.sh; do bash -n "$s" && echo "ok: $s"; done
 
+      - name: Syntax-check e2e scripts (node)
+        run: node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs
+
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
         with:

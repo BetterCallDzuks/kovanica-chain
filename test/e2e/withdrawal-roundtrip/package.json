@@ -1,0 +1,17 @@
+{
+  "name": "@kovanica-chain/withdrawal-roundtrip-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Stage-1 devnet acceptance test for kovanica-chain: deposit + full prove->finalize withdrawal via the permissionless DisputeGameFactory path (viem op-stack actions).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node roundtrip.mjs",
+    "test": "node roundtrip.mjs"
+  },
+  "dependencies": {
+    "viem": "2.55.17"
+  }
+}
