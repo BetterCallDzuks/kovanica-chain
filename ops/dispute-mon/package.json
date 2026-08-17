@@ -1,0 +1,17 @@
+{
+  "name": "@kovanica-chain/dispute-mon",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lightweight spot-check monitor for kovanica-chain fault-proof dispute games: scans the DisputeGameFactory and FLAGS a respected-game-type game resolving CHALLENGER_WINS (a proven-invalid proposal). Complements op-dispute-mon; not a replacement.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node dispute-mon.mjs",
+    "test:unit": "node --test"
+  },
+  "dependencies": {
+    "viem": "2.55.17"
+  }
+}

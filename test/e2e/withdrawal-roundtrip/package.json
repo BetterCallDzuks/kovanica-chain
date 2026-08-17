@@ -9,7 +9,8 @@
   },
   "scripts": {
     "start": "node roundtrip.mjs",
-    "test": "node roundtrip.mjs"
+    "test": "node roundtrip.mjs",
+    "test:unit": "node --test"
   },
   "dependencies": {
     "viem": "2.55.17"

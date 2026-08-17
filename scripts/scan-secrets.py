@@ -26,6 +26,11 @@ PATTERNS = [
     # A raw 64-hex private key assigned to a key-like name via a literal (not env).
     ("hardcoded private key", re.compile(
         r"(?i)(?:private[_-]?key|privkey|secret[_-]?key)\s*[:=]\s*['\"]?0x?[0-9a-f]{64}\b")),
+    # RPC/URL with embedded basic-auth credentials (SECURITY.md forbids these).
+    ("credentialed URL", re.compile(r"[a-z][a-z0-9+.\-]*://[^\s/:@]+:[^\s/:@]+@")),
+    # Engine-API JWT secret assigned to a jwt-ish name (bare 64-hex, no 0x — so
+    # this does NOT match 0x-prefixed prestate hashes).
+    ("engine JWT secret", re.compile(r"(?i)\bjwt(?:secret|_secret|token)?\b\s*[:=]\s*['\"]?(?:0x)?[0-9a-f]{64}\b")),
     ("AWS access key id", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
     ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b")),
     ("Slack token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
@@ -35,6 +40,9 @@ PATTERNS = [
 
 # 12- or 24-word all-lowercase quoted phrase (a BIP39 mnemonic shape).
 MNEMONIC = re.compile(r"['\"]((?:[a-z]+ ){11,23}[a-z]+)['\"]")
+# Same, but UNQUOTED after a `mnemonic:`/`mnemonic =` label — the shape a leaked
+# doc line takes (the original near-miss was plaintext in a doc, not a string).
+MNEMONIC_UNQUOTED = re.compile(r"(?i)\bmnemonic\b['\"]?\s*[:=]\s*((?:[a-z]+ ){11,23}[a-z]+)")
 
 
 def tracked_files():
@@ -56,10 +64,12 @@ def main() -> None:
             for label, pat in PATTERNS:
                 if pat.search(line):
                     findings.append((path, n, label))
-            for m in MNEMONIC.finditer(line):
-                words = m.group(1).split()
-                if len(words) in (12, 24) and m.group(1) != TEST_MNEMONIC:
-                    findings.append((path, n, "possible BIP39 mnemonic"))
+            for pat in (MNEMONIC, MNEMONIC_UNQUOTED):
+                for m in pat.finditer(line):
+                    phrase = m.group(1).strip()
+                    words = phrase.split()
+                    if len(words) in (12, 24) and phrase != TEST_MNEMONIC:
+                        findings.append((path, n, "possible BIP39 mnemonic"))
 
     if findings:
         print("FAIL: potential secrets found:")

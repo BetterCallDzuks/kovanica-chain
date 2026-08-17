@@ -108,11 +108,28 @@ def main() -> None:
     if isinstance(ext, int) and isinstance(dur, int) and ext >= dur:
         err(f"faultGameClockExtension ({ext}) must be < faultGameMaxClockDuration ({dur})")
 
+    # Large-preimage challenge window must not outlast the game clock (else the
+    # preimage dispute path can exceed the whole dispute clock). Enforced here
+    # for Sepolia too, not just devnet.
+    preimage = cfg.get("preimageOracleChallengePeriod")
+    if isinstance(preimage, int) and isinstance(dur, int) and preimage > dur:
+        err(f"preimageOracleChallengePeriod ({preimage}) must not exceed "
+            f"faultGameMaxClockDuration ({dur})")
+
     # If structural checks already failed, report and stop before deploy checks.
     if errors:
         _report(strict, path)
 
     # --- deploy-readiness (warn in lint, hard-fail in --deploy) --------------
+    # In strict mode the custody checks below are only meaningful with these
+    # env vars set. Require them, so we never print "deploy-ready" while the
+    # SAFE-contract and guardian!=deployer checks were silently skipped.
+    if strict:
+        if not os.environ.get("L1_RPC_URL"):
+            err("--deploy requires L1_RPC_URL (to verify owner roles are SAFE contracts, not EOAs)")
+        if not os.environ.get("DEPLOYER_ADDRESS"):
+            err("--deploy requires DEPLOYER_ADDRESS (to verify guardian != deployer)")
+
     for role in ROLES:
         if cfg.get(role) == ZERO_ADDR:
             warn_or_err(f"{role} is the zero address — fill with a SAFE account before deploy", strict)

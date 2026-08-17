@@ -1,0 +1,17 @@
+{
+  "name": "@kovanica-chain/health",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Operator health-check CLI for a kovanica-chain OP Stack devnet: L1/L2 head liveness and op-node sync status (unsafe/safe/finalized head lag).",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node health.mjs",
+    "test:unit": "node --test"
+  },
+  "dependencies": {
+    "viem": "2.55.17"
+  }
+}

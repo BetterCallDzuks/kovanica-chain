@@ -37,6 +37,9 @@ jobs:
       - name: Secret scan
         run: python scripts/scan-secrets.py
 
+      - name: Check L2 genesis (skips in CI until a devnet run generates it)
+        run: python scripts/check-l2-genesis.py
+
       - name: Validate deploy-config JSON
         run: |
           for f in packages/contracts-bedrock/deploy-config/*.json; do
@@ -48,13 +51,44 @@ jobs:
         run: |
           for s in scripts/*.sh; do bash -n "$s" && echo "ok: $s"; done
 
-      - name: Syntax-check e2e scripts (node)
-        run: node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs
+      - name: Syntax-check node scripts
+        run: |
+          node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs
+          node --check ops/health/health.mjs
+          node --check ops/dispute-mon/dispute-mon.mjs
 
+      # ShellCheck via apt rather than a third-party action pinned to a mutable
+      # branch (supply-chain hardening — see docs/audits/repo-posture-review.md).
       - name: ShellCheck
-        uses: ludeeus/action-shellcheck@master
+        run: |
+          sudo apt-get update && sudo apt-get install -y shellcheck
+          shellcheck scripts/*.sh
+
+  js-unit:
+    name: JS unit tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - test/e2e/withdrawal-roundtrip
+          - ops/health
+          - ops/dispute-mon
+    defaults:
+      run:
+        working-directory: ${{ matrix.project }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
-          scandir: ./scripts
+          node-version: "22"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Unit tests (pure logic, no devnet)
+        run: npm run test:unit
 
   contracts:
     name: Foundry (contracts-bedrock)
@@ -74,6 +108,10 @@ jobs:
       - name: Check formatting
         run: forge fmt --check
 
+      # NOTE: this package currently holds only a scaffold example + JSON
+      # deploy-config invariant tests — a green check here does NOT imply
+      # coverage of any bridge/portal/predeploy (none are vendored yet). A real
+      # Foundry suite + chain-security-auditor pass gate any real-value deploy.
       - name: Build
         run: forge build --sizes
 

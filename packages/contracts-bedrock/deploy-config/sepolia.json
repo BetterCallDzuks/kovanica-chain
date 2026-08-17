@@ -24,7 +24,8 @@
   "_timers_note": "Testnet iteration timers. Fault-game clock is 6h (faultGameMaxClockDuration 21600) with a 30m extension (faultGameClockExtension 1800) so an honest challenger has a realistic response window and extension < duration. Withdrawal/proof/finality are ~1h for iteration. Production/mainnet standard for contrast: faultGameWithdrawalDelay 604800, proofMaturityDelaySeconds 604800, disputeGameFinalityDelaySeconds 302400, faultGameClockExtension 10800, faultGameMaxClockDuration 302400.",
 
   "preimageOracleMinProposalSize": 126000,
-  "preimageOracleChallengePeriod": 86400,
+  "preimageOracleChallengePeriod": 3600,
+  "_preimage_note": "Kept <= faultGameMaxClockDuration (21600) so the large-preimage dispute path can't outlast the game clock; enforced by scripts/validate-sepolia-config.py.",
 
   "fundDevAccounts": false,
 

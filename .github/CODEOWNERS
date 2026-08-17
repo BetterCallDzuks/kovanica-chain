@@ -1,0 +1,13 @@
+# Code ownership for kovanica-chain. Review is required from an owner on the
+# consensus- and bridge-critical paths (CLAUDE.md §3).
+
+# Default owner for everything.
+*                                   @BetterCallDzuks
+
+# Security- and consensus-critical paths — never merge without owner review.
+/packages/contracts-bedrock/        @BetterCallDzuks
+/devnet/                            @BetterCallDzuks
+/deploy/                            @BetterCallDzuks
+/scripts/                           @BetterCallDzuks
+/.github/                           @BetterCallDzuks
+/CLAUDE.md                          @BetterCallDzuks
