@@ -31,6 +31,9 @@ jobs:
       - name: Check config consistency (network_params vs deploy-config)
         run: python scripts/check-config-consistency.py
 
+      - name: Lint Sepolia deploy-config
+        run: python scripts/validate-sepolia-config.py
+
       - name: Validate deploy-config JSON
         run: |
           for f in packages/contracts-bedrock/deploy-config/*.json; do

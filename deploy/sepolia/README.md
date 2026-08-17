@@ -36,19 +36,29 @@ higher than the local devnet.
 2. **Edit the intent** to match `intent.template.toml` here and
    `../../packages/contracts-bedrock/deploy-config/sepolia.json` — SAFE roles,
    `fundDevAccounts=false`, fault-proof timers. Fill every `0x0000…` placeholder.
-3. **Apply** — deploys L1 contracts:
+3. **Pre-flight gate** — the config must pass the strict validator before you
+   apply (fails on zero-address roles, `fundDevAccounts`, a placeholder/devnet
+   prestate, or the devnet chain id). This is the mechanical gate from the
+   config audit (`docs/audits/stage2-config-review.md`, finding HIGH):
+   ```bash
+   # optional on-chain SAFE (contract) check for owner roles:
+   DEPLOYER_ADDRESS=0x<deployer> L1_RPC_URL=$L1_RPC_URL \
+     python scripts/validate-sepolia-config.py --deploy
+   ```
+   Do not proceed until it prints `OK (deploy-ready)`.
+4. **Apply** — deploys L1 contracts:
    ```bash
    op-deployer apply --workdir .deployer --l1-rpc-url $L1_RPC_URL \
      --private-key $DEPLOYER_PRIVATE_KEY
    ```
    Records all addresses/roles to `.deployer/state.json` (gitignored).
-4. **Inspect** — derive L2 genesis/rollup from the finalized deployment (never
+5. **Inspect** — derive L2 genesis/rollup from the finalized deployment (never
    hand-edit these):
    ```bash
    op-deployer inspect genesis --workdir .deployer <L2_CHAIN_ID> > .deployer/genesis.json
    op-deployer inspect rollup  --workdir .deployer <L2_CHAIN_ID> > .deployer/rollup.json
    ```
-5. **Generate the Sepolia prestate** and wire it in (the devnet prestate does
+6. **Generate the Sepolia prestate** and wire it in (the devnet prestate does
    not apply):
    ```bash
    MONOREPO_REF=op-program/vX.Y.Z L2_CHAIN_ID=<L2_CHAIN_ID> \
@@ -56,11 +66,11 @@ higher than the local devnet.
      scripts/gen-prestate.sh
    scripts/set-prestate.sh 0x<hash>   # updates deploy-config/sepolia.json too — verify it
    ```
-6. **Bring up nodes** against the generated config, start op-batcher /
+7. **Bring up nodes** against the generated config, start op-batcher /
    op-proposer / op-challenger with the matching prestate.
-7. **Post-deploy verification** — read back `ProxyAdmin` owner, `SystemConfig`
+8. **Post-deploy verification** — read back `ProxyAdmin` owner, `SystemConfig`
    params, and the guardian; confirm they match intent and are SAFE-owned.
-8. **Go permissionless** — once `op-dispute-mon` shows healthy games and the
+9. **Go permissionless** — once `op-dispute-mon` shows healthy games and the
    challenger reliably resolves them, flip `respectedGameType` 1 → 0.
 
 ## Record for the Superchain Registry
