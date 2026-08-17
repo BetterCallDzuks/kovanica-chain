@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.25;
 
-import {Test} from "forge-std/Test.sol";
 import {Counter} from "../src/example/Counter.sol";
+import {Test} from "forge-std/Test.sol";
 
 /// @notice Scaffold test proving forge build/test works in CI. Delete with the
 ///         example contract once real contracts land.
