@@ -25,6 +25,13 @@ Run the full local gate before pushing — it mirrors CI:
 make check
 ```
 
+Install the git hook so it runs automatically on every push (bypass with
+`git push --no-verify`):
+
+```bash
+make install-hooks
+```
+
 For the contracts package (needs Foundry):
 
 ```bash

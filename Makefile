@@ -6,7 +6,7 @@
 
 ENCLAVE ?= kovanica-devnet
 
-.PHONY: help check devnet-up devnet-down devnet-inspect devnet-logs gen-prestate set-prestate
+.PHONY: help check install-hooks devnet-up devnet-down devnet-inspect devnet-logs gen-prestate set-prestate
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -23,6 +23,12 @@ check: ## Run all config validators, secret scan, and script syntax checks (mirr
 	@echo ">> node syntax"                   && node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs && node --check ops/health/health.mjs && node --check ops/dispute-mon/dispute-mon.mjs && echo "  node ok"
 	@echo ">> deploy-config JSON"            && for f in packages/contracts-bedrock/deploy-config/*.json; do python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$$f"; done && echo "  json ok"
 	@echo "All checks passed."
+
+install-hooks: ## Install git hooks (pre-push runs `make check`)
+	@mkdir -p .git/hooks
+	@ln -sf ../../scripts/hooks/pre-push .git/hooks/pre-push
+	@chmod +x scripts/hooks/pre-push
+	@echo "Installed pre-push hook (bypass with 'git push --no-verify')."
 
 devnet-up: ## Bring up the local Kurtosis devnet (fault proofs enabled)
 	@scripts/devnet-up.sh
