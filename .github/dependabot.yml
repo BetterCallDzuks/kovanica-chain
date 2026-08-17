@@ -9,6 +9,24 @@ updates:
     labels:
       - "dependencies"
 
+  # ops health-check CLI deps (viem).
+  - package-ecosystem: "npm"
+    directory: "/ops/health"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
+  # ops dispute-game monitor deps (viem).
+  - package-ecosystem: "npm"
+    directory: "/ops/dispute-mon"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+
   # GitHub Actions used in CI.
   - package-ecosystem: "github-actions"
     directory: "/"
