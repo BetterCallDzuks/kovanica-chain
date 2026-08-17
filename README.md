@@ -22,6 +22,7 @@ the working memory / tooling that drives development (`.claude/`).
 | `SECURITY.md` | Secret-handling + key-custody policy |
 | `Makefile` | `make devnet-up`, `devnet-inspect`, `devnet-logs`, `devnet-down` |
 | `deploy/sepolia/` | Stage 2 (Sepolia testnet) op-deployer intent template + deployment runbook |
+| `docs/operations/` | Operator runbooks — forced inclusion, sequencer-failure modes, guardian emergency powers |
 | `docs/` | The 2026 fault-proof bootstrapping procedure + project notes (`docs/notes/`) |
 | `.env.example` | Env var template (L1 RPC, deployer/batcher/proposer keys) |
 | `.claude/` | Subagents, skills, and slash commands for this repo |
