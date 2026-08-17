@@ -35,10 +35,12 @@ The validator only checks the prestate is a 66-char `0x` hex string, so the plac
 ### [LOW] `preimageOracleChallengePeriod` inconsistent with the shortened clocks
 `devnet.json` / `sepolia.json`. The 1-day (86400s) preimage challenge period exceeds `faultGameMaxClockDuration` (1200s devnet / 3600s sepolia) and `faultGameWithdrawalDelay` (3600s); in the large-preimage path this window can outlast the dispute clock, breaking devnet game liveness and making Sepolia timing unrepresentative.
 **Recommendation:** scale `preimageOracleChallengePeriod` down consistently with the shortened clocks on devnet; add validator checks for `faultGameClockExtension < faultGameMaxClockDuration` and a sane preimage-period-vs-clock relationship.
+**Status: ADDRESSED.** Devnet `preimageOracleChallengePeriod` lowered to 300 (≤ `faultGameMaxClockDuration` 300), and `validate_network_params.py` now enforces `preimageOracleChallengePeriod ≤ faultGameMaxClockDuration` and `faultGameClockExtension < faultGameMaxClockDuration`.
 
 ### [LOW] Sepolia fault-proof clocks are aggressively short
 `sepolia.json` / `intent.template.toml`: `faultGameMaxClockDuration = 3600`, `faultGameClockExtension = 3600` (extension == duration is unusual; extension is normally well below duration). An honest challenger offline ~1h could let an invalid output root resolve. Documented as testnet iteration timers, but a public testnet still exposes this.
 **Recommendation:** on Sepolia use `maxClockDuration` of at least a few hours with `clockExtension < maxClockDuration`, and state explicitly that Sepolia carries no meaningful value.
+**Status: ADDRESSED.** Sepolia `faultGameMaxClockDuration` raised to 21600 (6h) and `faultGameClockExtension` set to 1800 (30m) in `deploy-config/sepolia.json` and `deploy/sepolia/intent.template.toml`; `validate-sepolia-config.py` now hard-fails if `clockExtension ≥ maxClockDuration`.
 
 ### [LOW/INFO] `.env.example` not verified
 Reviewer could not read `.env.example` (sandbox permission denied — it is in the tool deny-list, which is itself a good sign). Manually confirm it contains only placeholders (no real keys, no RPC URLs with embedded credentials). `.gitignore` secret coverage is good: `.env`/`.env.*` ignored except `.env.example`, plus `*.pem`, `*keystore*`, `.deployer/`, `devnet/out/`, and the prestate binaries.

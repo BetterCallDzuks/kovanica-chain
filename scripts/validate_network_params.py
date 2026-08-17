@@ -62,8 +62,22 @@ def main() -> None:
     if l1 != l2:
         fail(f"l1/l2 artifacts locators should match ({l1!r} vs {l2!r})")
 
+    # Fault-game clock sanity: the per-response extension must be strictly below
+    # the max clock duration, or a game can never make forward progress.
+    ext = overrides.get("faultGameClockExtension")
+    dur = overrides.get("faultGameMaxClockDuration")
+    if isinstance(ext, int) and isinstance(dur, int) and ext >= dur:
+        fail(f"faultGameClockExtension ({ext}) must be < faultGameMaxClockDuration ({dur})")
+
+    # The preimage challenge window should not outlast the game clock, or the
+    # large-preimage dispute path can exceed the whole dispute clock.
+    preimage = overrides.get("preimageOracleChallengePeriod")
+    if isinstance(preimage, int) and isinstance(dur, int) and preimage > dur:
+        fail(f"preimageOracleChallengePeriod ({preimage}) should not exceed "
+             f"faultGameMaxClockDuration ({dur})")
+
     print(f"OK: {path} — game_type=0, challenger enabled, prestate set, "
-          f"artifacts locator {l1}")
+          f"artifacts locator {l1}, clock sanity OK")
 
 
 if __name__ == "__main__":

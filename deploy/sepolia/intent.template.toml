@@ -54,5 +54,5 @@ id = "<L2_CHAIN_ID>"   # e.g. 29001 — must match deploy-config/sepolia.json
   faultGameWithdrawalDelay = 3600
   proofMaturityDelaySeconds = 3600
   disputeGameFinalityDelaySeconds = 3600
-  faultGameMaxClockDuration = 3600
-  faultGameClockExtension = 3600
+  faultGameMaxClockDuration = 21600   # 6h clock; keep clockExtension < this
+  faultGameClockExtension = 1800      # 30m

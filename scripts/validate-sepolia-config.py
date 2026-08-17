@@ -100,6 +100,14 @@ def main() -> None:
     if not is_hash32(prestate):
         err(f"faultGameAbsolutePrestate must be a 32-byte 0x-hex string (got {prestate!r})")
 
+    # Fault-game clock sanity: extension must be strictly below max duration, or
+    # a game can never make forward progress; and an honest challenger needs a
+    # realistic response window on a public network.
+    ext = cfg.get("faultGameClockExtension")
+    dur = cfg.get("faultGameMaxClockDuration")
+    if isinstance(ext, int) and isinstance(dur, int) and ext >= dur:
+        err(f"faultGameClockExtension ({ext}) must be < faultGameMaxClockDuration ({dur})")
+
     # If structural checks already failed, report and stop before deploy checks.
     if errors:
         _report(strict, path)
