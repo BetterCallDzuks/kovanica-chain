@@ -21,7 +21,7 @@ check: ## Run all config validators, secret scan, and script syntax checks (mirr
 	@echo ">> check-l2-genesis"             && python3 scripts/check-l2-genesis.py
 	@echo ">> shell syntax"                  && for s in scripts/*.sh; do bash -n "$$s"; done && echo "  shell ok"
 	@echo ">> shellcheck"                    && if command -v shellcheck >/dev/null 2>&1; then shellcheck scripts/*.sh scripts/hooks/*; else echo "  (shellcheck not installed — skipped locally; CI enforces)"; fi
-	@echo ">> node syntax"                   && node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs && node --check ops/health/health.mjs && node --check ops/dispute-mon/dispute-mon.mjs && echo "  node ok"
+	@echo ">> node syntax"                   && node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs && node --check ops/health/health.mjs && node --check ops/dispute-mon/dispute-mon.mjs && node --check ops/da-check/da-check.mjs && echo "  node ok"
 	@echo ">> deploy-config JSON"            && for f in packages/contracts-bedrock/deploy-config/*.json; do python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$$f"; done && echo "  json ok"
 	@echo "All checks passed."
 
