@@ -82,8 +82,11 @@ subagents defined under `.claude/` (see `CLAUDE.md` §6–§8). The plugin under
 
 ## Version pinning
 
-op-deployer and the `op-contracts/vX.Y.Z` tag must move together — the devnet
-pins `op-deployer:v0.4.2` + `op-contracts/v4.0.0`. Whenever the contracts tag
+Pins live in [`versions.json`](versions.json) (the single source of truth);
+`scripts/check-versions.py` (in CI + `make check`) fails the build if
+`devnet/network_params.yaml` drifts from it. op-deployer and the
+`op-contracts/vX.Y.Z` tag must move together — the devnet pins
+`op-deployer:v0.4.2` + `op-contracts/v4.0.0`. Whenever the contracts tag
 changes, re-derive genesis/rollup, **regenerate the Cannon prestate**, and bump
 op-node/op-geth to the same release line. Never mix bare `v<semver>` (Go-only,
 no contracts) tags with `op-contracts/*` expectations.

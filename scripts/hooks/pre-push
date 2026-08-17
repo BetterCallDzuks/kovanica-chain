@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# kovanica-chain pre-push hook — run the local gate before a push leaves the
+# machine, so config drift / secret leaks / failing tests are caught here, not
+# in CI. Install with `make install-hooks`. Bypass (rarely) with `git push --no-verify`.
+set -euo pipefail
+
+echo "[pre-push] running 'make check'..." >&2
+if ! make check; then
+  echo "[pre-push] make check FAILED — push aborted (use --no-verify to override)." >&2
+  exit 1
+fi
+echo "[pre-push] ok." >&2
