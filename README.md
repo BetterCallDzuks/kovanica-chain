@@ -16,7 +16,9 @@ the working memory / tooling that drives development (`.claude/`).
 | `devnet/network_params.yaml` | Kurtosis `optimism-package` config — fault proofs on (`game_type: 0`), challenger enabled, devnet-shortened timers |
 | `devnet/README.md` | Devnet bring-up, health check, absolute-prestate step, deposit→withdraw sanity check |
 | `devnet/static_files/prestates/` | Where the op-challenger's Cannon prestate is served from |
-| `scripts/` | `devnet-up` / `devnet-inspect` / `devnet-down` wrappers |
+| `packages/contracts-bedrock/` | Foundry package — deploy-config + custom/extension contracts (core OP Stack contracts come from the pinned `op-contracts` tag, not hand-written) |
+| `.github/workflows/ci.yml` | CI — validates the devnet config/scripts and runs `forge fmt`/`build`/`test` |
+| `scripts/` | `devnet-up` / `devnet-inspect` / `devnet-down` wrappers + `validate_network_params.py` |
 | `Makefile` | `make devnet-up`, `devnet-inspect`, `devnet-logs`, `devnet-down` |
 | `docs/` | The 2026 fault-proof bootstrapping procedure (reference of record) |
 | `.env.example` | Env var template (L1 RPC, deployer/batcher/proposer keys) |
@@ -51,6 +53,22 @@ deposit → withdraw → prove → finalize sanity check.
 
 **Stage 1 done when:** a deposit and a full prove→finalize withdrawal both
 succeed in minutes on the local devnet.
+
+## Contracts
+
+`packages/contracts-bedrock/` is the Foundry package. The **core OP Stack
+contracts** (`OptimismPortal`, `DisputeGameFactory`, bridge, predeploys) are
+deployed from the pinned, governance-approved **`op-contracts/v4.0.0`** release
+via `op-deployer`/OPCM — they are security-critical and are not reproduced from
+memory (see `CLAUDE.md` §3). The package holds the per-network `deploy-config`,
+any kovanica-specific extension contracts, and their tests. See
+[`packages/contracts-bedrock/README.md`](packages/contracts-bedrock/README.md).
+
+```bash
+cd packages/contracts-bedrock
+forge install foundry-rs/forge-std   # first time
+forge fmt --check && forge build --sizes && forge test -vvv
+```
 
 ## Toolchain (`.claude/`)
 

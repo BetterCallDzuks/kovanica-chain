@@ -1,0 +1,26 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+test = "test"
+script = "script"
+solc_version = "0.8.25"
+optimizer = true
+optimizer_runs = 999999
+# Deterministic bytecode for reproducible deployments.
+bytecode_hash = "none"
+cbor_metadata = false
+fs_permissions = [{ access = "read", path = "./deploy-config" }]
+
+[profile.ci]
+# CI runs the same build; verbose test output is set on the command line.
+optimizer_runs = 999999
+
+[fmt]
+line_length = 120
+tab_width = 4
+quote_style = "double"
+number_underscore = "thousands"
+sort_imports = true
+
+# Docs: https://book.getfoundry.sh/reference/config/
