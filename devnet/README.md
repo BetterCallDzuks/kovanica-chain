@@ -72,26 +72,46 @@ finalize** (finalize reverts with *"OptimismPortal: output proposal has not
 been validated"*).
 
 Because the prestate encodes kovanica's own chain config, a custom chain must
-build its own:
+build its own. Two helper scripts automate this (see `../scripts/`):
 
-1. Bring the devnet up once and download genesis/rollup (`make devnet-inspect`
-   + `kurtosis files download` above).
-2. Place kovanica's genesis/rollup config in
-   `op-program/chainconfig/configs`, check out the matching `op-program/vX.Y.Z`
-   tag, and run the prestate generation (see the "Generating absolute prestate"
-   tutorial referenced in the procedure doc).
-3. Take the printed **Cannon64** hash (64-bit MT-Cannon, post–Upgrade 14 —
-   *not* the single-threaded `prestate.bin.gz`):
+**1. Get kovanica's genesis + rollup** from a devnet run:
 
-   ```
-   Cannon64  Absolute prestate hash: 0x03eb0710...b72e4fc8
-   ```
+```bash
+make devnet-up && make devnet-inspect   # writes devnet/out/genesis.json + rollup.json
+```
 
-4. Put that hash in `faultGameAbsolutePrestate`, drop the matching
-   `<HASH>.json` / `<HASH>.bin.gz` into `static_files/prestates/`, and re-run
-   the devnet.
-5. Confirm the challenger logs show it responding to games (no missing/refused
-   prestate).
+**2. Build the Cannon64 prestate** (reproducible, containerized — needs Docker).
+Pin `MONOREPO_REF` to the `op-program`/monorepo tag that matches the contracts
+tag (`op-contracts/v4.0.0`) — the script refuses to guess:
+
+```bash
+MONOREPO_REF=op-program/vX.Y.Z make gen-prestate
+# equivalently: MONOREPO_REF=... scripts/gen-prestate.sh
+```
+
+The script checks out the monorepo at that ref, stages your configs as
+`op-program/chainconfig/configs/2900-genesis-l2.json` and `2900-rollup.json`,
+runs `make reproducible-prestate`, copies the artifacts
+(`prestate-mt64.bin.gz` + proof json) into `static_files/prestates/`, and prints:
+
+```
+Cannon64 absolute prestate hash: 0x03eb0710...b72e4fc8
+```
+
+Use the **Cannon64** (64-bit MT-Cannon, post–Upgrade 14) hash — *not* the
+single-threaded `prestate.bin.gz`.
+
+**3. Wire the hash in** (updates both `network_params.yaml` and the contracts
+`deploy-config/devnet.json` so they never drift):
+
+```bash
+make set-prestate HASH=0x03eb0710...b72e4fc8
+python3 ../scripts/validate_network_params.py   # confirm
+```
+
+**4. Re-run the devnet** so contracts redeploy against the new prestate, then
+confirm the challenger logs show it responding to games (no missing/refused
+prestate).
 
 ## Sanity check: deposit → withdraw → prove → finalize
 

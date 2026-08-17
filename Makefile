@@ -6,7 +6,7 @@
 
 ENCLAVE ?= kovanica-devnet
 
-.PHONY: help devnet-up devnet-down devnet-inspect devnet-logs
+.PHONY: help devnet-up devnet-down devnet-inspect devnet-logs gen-prestate set-prestate
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -23,3 +23,9 @@ devnet-logs: ## Follow the op-challenger logs
 
 devnet-down: ## Tear down the local devnet enclave
 	@scripts/devnet-down.sh
+
+gen-prestate: ## Stage 1b: build kovanica's Cannon64 absolute prestate (needs Docker + MONOREPO_REF + genesis/rollup)
+	@scripts/gen-prestate.sh
+
+set-prestate: ## Wire a generated prestate hash into config: make set-prestate HASH=0x...
+	@scripts/set-prestate.sh $(HASH)
