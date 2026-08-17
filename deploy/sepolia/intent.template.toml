@@ -1,0 +1,58 @@
+# kovanica-chain — op-deployer intent TEMPLATE for Sepolia (Stage 2).
+#
+# op-deployer is the canonical L1 deploy path (OPCM factory + shared
+# implementations). This is a TEMPLATE for reference — do not deploy from it
+# directly. The real flow generates its own intent + state:
+#
+#   op-deployer init \
+#     --l1-chain-id 11155111 \
+#     --l2-chain-ids <YOUR_L2_CHAIN_ID> \
+#     --workdir .deployer \
+#     --intent-type standard-overrides
+#
+# `init` writes .deployer/intent.toml (+ state.json) and, on Sepolia,
+# PRE-POPULATES opcmAddress and the contracts locators for supported versions.
+# Edit the generated intent to match the values below, then:
+#
+#   op-deployer apply   --workdir .deployer --l1-rpc-url $L1_RPC_URL --private-key $DEPLOYER_PRIVATE_KEY
+#   op-deployer inspect genesis --workdir .deployer <L2_CHAIN_ID> > .deployer/genesis.json
+#   op-deployer inspect rollup  --workdir .deployer <L2_CHAIN_ID> > .deployer/rollup.json
+#
+# Pin op-deployer to the release that maps to op-contracts/v4.0.0 (mixing them
+# yields "unknown selector" errors). .deployer/ is gitignored — never commit
+# state.json or keys.
+
+configType = "standard-overrides"
+l1ChainID = 11155111
+
+# Locators — on Sepolia these are pre-populated by `op-deployer init` for
+# supported versions. Keep L1 and L2 on the SAME governance-approved tag.
+l1ContractsLocator = "tag://op-contracts/v4.0.0"
+l2ContractsLocator = "tag://op-contracts/v4.0.0"
+# opcmAddress is auto-filled by `op-deployer init` on Sepolia — do not guess it.
+
+[[chains]]
+id = "<L2_CHAIN_ID>"   # e.g. 29001 — must match deploy-config/sepolia.json
+
+  # Roles. All owner roles MUST be SAFE (smart-contract) accounts, never the
+  # deployer EOA. The deployer retains no control after deployment.
+  [chains.roles]
+  proxyAdminOwner   = "0x0000000000000000000000000000000000000000"  # SAFE
+  systemConfigOwner = "0x0000000000000000000000000000000000000000"  # SAFE
+  guardian          = "0x0000000000000000000000000000000000000000"  # SAFE, distinct from deployer
+  batcher           = "0x0000000000000000000000000000000000000000"
+  proposer          = "0x0000000000000000000000000000000000000000"
+  challenger        = "0x0000000000000000000000000000000000000000"
+
+  # Fault-proof + fork overrides. Mirror deploy-config/sepolia.json; keep the
+  # two in sync. Regenerate faultGameAbsolutePrestate for the Sepolia config.
+  [chains.globalDeployOverrides]
+  fundDevAccounts = false
+  useFaultProofs = true
+  respectedGameType = 1            # bootstrap permissioned; flip to 0 once games are healthy
+  faultGameAbsolutePrestate = "0x0000000000000000000000000000000000000000000000000000000000000000"
+  faultGameWithdrawalDelay = 3600
+  proofMaturityDelaySeconds = 3600
+  disputeGameFinalityDelaySeconds = 3600
+  faultGameMaxClockDuration = 3600
+  faultGameClockExtension = 3600

@@ -1,0 +1,36 @@
+{
+  "_comment": "kovanica-chain SEPOLIA TESTNET (Stage 2) intent. Human-readable target parameters; the actual deployment is driven by op-deployer (see deploy/sepolia/). This is a PUBLIC testnet: ownership must be SAFE-based and a chain-security-auditor pass is required before deploying (CLAUDE.md §3). Values with 0x0000… are placeholders you MUST fill.",
+
+  "l1ChainID": 11155111,
+  "l2ChainID": 29001,
+  "_l2ChainID_note": "Placeholder — choose a unique L2 chain id and (if joining the Superchain) reserve/register it before public launch. Must differ from the devnet id (2900).",
+  "l2BlockTime": 2,
+
+  "useFaultProofs": true,
+
+  "respectedGameType": 1,
+  "_respectedGameType_note": "Bootstrap on 1 (PermissionedDisputeGame) per the standard OP Stack bring-up order, then flip to 0 (permissionless CANNON) once op-dispute-mon shows healthy games and the challenger reliably resolves them.",
+
+  "faultGameAbsolutePrestate": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "_faultGameAbsolutePrestate_note": "Regenerate the Cannon64 prestate for the SEPOLIA genesis/rollup (scripts/gen-prestate.sh) — the devnet prestate does NOT apply here.",
+
+  "faultGameMaxDepth": 73,
+  "faultGameSplitDepth": 30,
+  "faultGameClockExtension": 3600,
+  "faultGameMaxClockDuration": 3600,
+  "faultGameWithdrawalDelay": 3600,
+  "proofMaturityDelaySeconds": 3600,
+  "disputeGameFinalityDelaySeconds": 3600,
+  "_timers_note": "Moderately shortened (~1h) for testnet iteration. Production/mainnet standard for contrast: faultGameWithdrawalDelay 604800, proofMaturityDelaySeconds 604800, disputeGameFinalityDelaySeconds 302400, faultGameClockExtension 10800, faultGameMaxClockDuration 302400.",
+
+  "preimageOracleMinProposalSize": 126000,
+  "preimageOracleChallengePeriod": 86400,
+
+  "fundDevAccounts": false,
+
+  "proxyAdminOwner": "0x0000000000000000000000000000000000000000",
+  "systemConfigOwner": "0x0000000000000000000000000000000000000000",
+  "guardian": "0x0000000000000000000000000000000000000000",
+  "challenger": "0x0000000000000000000000000000000000000000",
+  "_ownership_note": "proxyAdminOwner/systemConfigOwner/guardian MUST be SAFE (smart-contract) accounts, never the deployer EOA. Keep the guardian (controls pause, dispute-game blacklist, respected-game-type) distinct from the deployer, which retains no control after deployment."
+}

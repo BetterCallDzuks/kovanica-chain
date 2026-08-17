@@ -20,7 +20,8 @@ the working memory / tooling that drives development (`.claude/`).
 | `.github/workflows/ci.yml` | CI — validates the devnet config/scripts and runs `forge fmt`/`build`/`test` |
 | `scripts/` | `devnet-up` / `devnet-inspect` / `devnet-down` wrappers + `validate_network_params.py` |
 | `Makefile` | `make devnet-up`, `devnet-inspect`, `devnet-logs`, `devnet-down` |
-| `docs/` | The 2026 fault-proof bootstrapping procedure (reference of record) |
+| `deploy/sepolia/` | Stage 2 (Sepolia testnet) op-deployer intent template + deployment runbook |
+| `docs/` | The 2026 fault-proof bootstrapping procedure + project notes (`docs/notes/`) |
 | `.env.example` | Env var template (L1 RPC, deployer/batcher/proposer keys) |
 | `.claude/` | Subagents, skills, and slash commands for this repo |
 | `.claude-plugin/` | Plugin + marketplace manifest packaging the toolkit |
