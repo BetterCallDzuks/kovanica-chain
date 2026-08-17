@@ -224,13 +224,28 @@ Definitions live in `.claude/agents/`.
 
 ## 7. Skills
 
-Playbooks under `.claude/skills/`:
+Playbooks under `.claude/skills/`.
+
+**Rollup-specific (kovanica-chain):**
 
 - `devnet-setup` — stand up a local Kurtosis devnet (full L1+L2+node stack)
 - `bridge-contract-audit` — structured audit pass on bridge/predeploy contracts
 - `contract-deployment-l1` — deploy/upgrade L1 contracts via Foundry against deploy-config
 - `e2e-testing` — run/extend the op-e2e suite for full-stack behavior
 - `genesis-config` — generate `genesis.json`/`rollup.json` from deployed contract state
+
+**General EVM/Solidity (apply to the contracts-bedrock package and any custom
+contracts):** `solidity-evm` (core), `solidity-security`, `solidity-testing`,
+`foundry-workflow`, `gas-optimization`, `proxy-upgrades`, `erc-standards`,
+`defi-patterns`, `oracles`, `governance`, `mev`, `account-abstraction`,
+`nft-marketplace`, `solidity-assembly`, `evm-tx-analysis`, and `l2-multichain`
+(OP Stack / bridges / cross-chain). Prefer `chain-security-auditor` +
+`bridge-contract-audit` for the consensus/bridge-critical paths; these
+general skills cover ordinary EVM contract work.
+
+**Workflow:** `ai-to-obsidian` — capture session/VPS work as Obsidian-ready
+notes (frontmatter, links, Dataview) with Git/Syncthing sync; mirrors the
+`docs/notes/` + vault workflow this repo already uses.
 
 ## 8. Slash Commands
 

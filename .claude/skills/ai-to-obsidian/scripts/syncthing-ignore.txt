@@ -1,0 +1,8 @@
+.obsidian/workspace*
+.obsidian/workspace-mobile*
+.obsidian/cache
+.obsidian/plugins/dataview/data.json
+.trash
+*.tmp
+.git/index.lock
+.sync-conflict-*

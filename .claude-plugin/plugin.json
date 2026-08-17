@@ -1,7 +1,7 @@
 {
   "name": "kovanica-chain-toolkit",
-  "version": "1.0.0",
-  "description": "OP Stack rollup engineering toolkit for kovanica-chain: subagents for node stack (op-node/op-geth/op-batcher/op-proposer), bridge contracts, fault proofs, security auditing, devnet ops, and L1 deployment, plus matching skills and slash commands.",
+  "version": "1.1.0",
+  "description": "OP Stack rollup engineering toolkit for kovanica-chain: subagents for node stack (op-node/op-geth/op-batcher/op-proposer), bridge contracts, fault proofs, security auditing, devnet ops, and L1 deployment; rollup skills plus a general EVM/Solidity skill suite (security, foundry, gas, proxies, ERCs, DeFi, oracles, governance, MEV, AA, L2/multichain) and an ai-to-obsidian notes workflow; matching slash commands.",
   "author": {
     "name": "Toni"
   },
