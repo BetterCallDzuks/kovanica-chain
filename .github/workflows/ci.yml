@@ -56,6 +56,25 @@ jobs:
         with:
           scandir: ./scripts
 
+  e2e-unit:
+    name: e2e unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test/e2e/withdrawal-roundtrip
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Unit tests (pure logic, no devnet)
+        run: npm run test:unit
+
   contracts:
     name: Foundry (contracts-bedrock)
     runs-on: ubuntu-latest
