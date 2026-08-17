@@ -16,12 +16,12 @@
 
   "faultGameMaxDepth": 73,
   "faultGameSplitDepth": 30,
-  "faultGameClockExtension": 3600,
-  "faultGameMaxClockDuration": 3600,
+  "faultGameClockExtension": 1800,
+  "faultGameMaxClockDuration": 21600,
   "faultGameWithdrawalDelay": 3600,
   "proofMaturityDelaySeconds": 3600,
   "disputeGameFinalityDelaySeconds": 3600,
-  "_timers_note": "Moderately shortened (~1h) for testnet iteration. Production/mainnet standard for contrast: faultGameWithdrawalDelay 604800, proofMaturityDelaySeconds 604800, disputeGameFinalityDelaySeconds 302400, faultGameClockExtension 10800, faultGameMaxClockDuration 302400.",
+  "_timers_note": "Testnet iteration timers. Fault-game clock is 6h (faultGameMaxClockDuration 21600) with a 30m extension (faultGameClockExtension 1800) so an honest challenger has a realistic response window and extension < duration. Withdrawal/proof/finality are ~1h for iteration. Production/mainnet standard for contrast: faultGameWithdrawalDelay 604800, proofMaturityDelaySeconds 604800, disputeGameFinalityDelaySeconds 302400, faultGameClockExtension 10800, faultGameMaxClockDuration 302400.",
 
   "preimageOracleMinProposalSize": 126000,
   "preimageOracleChallengePeriod": 86400,

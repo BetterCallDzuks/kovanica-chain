@@ -55,12 +55,17 @@ optimism_package:
     l2_artifacts_locator: tag://op-contracts/v4.0.0
     global_deploy_overrides:
       # Devnet-shortened dispute/finalization timers so a full withdrawal round
-      # trip finishes in minutes, not days. NOT for any public network.
-      faultGameWithdrawalDelay: 3600
-      disputeGameFinalityDelaySeconds: 3600
-      proofMaturityDelaySeconds: 3600
-      faultGameMaxClockDuration: 1200
+      # trip actually finishes in minutes, not days. NOT for any public network.
+      # Keep these in lockstep with deploy-config/devnet.json — CI enforces it
+      # (scripts/check-config-consistency.py).
+      faultGameWithdrawalDelay: 120
+      disputeGameFinalityDelaySeconds: 600
+      proofMaturityDelaySeconds: 120
+      faultGameMaxClockDuration: 300
       faultGameClockExtension: 0
+      # Preimage challenge window kept below the game clock (was 86400, which
+      # exceeded the shortened clocks and broke large-preimage liveness).
+      preimageOracleChallengePeriod: 300
       # PLACEHOLDER — regenerate for kovanica's genesis/rollup (Stage 1b) and
       # replace with the printed Cannon64 hash. This value MUST equal the hash
       # of the prestate file the challenger serves from cannon_prestates_path,
