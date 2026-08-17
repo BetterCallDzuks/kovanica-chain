@@ -28,6 +28,12 @@ jobs:
       - name: Validate devnet/network_params.yaml
         run: python scripts/validate_network_params.py
 
+      - name: Check config consistency (network_params vs deploy-config)
+        run: python scripts/check-config-consistency.py
+
+      - name: Lint Sepolia deploy-config
+        run: python scripts/validate-sepolia-config.py
+
       - name: Validate deploy-config JSON
         run: |
           for f in packages/contracts-bedrock/deploy-config/*.json; do
@@ -38,6 +44,9 @@ jobs:
       - name: Syntax-check shell scripts
         run: |
           for s in scripts/*.sh; do bash -n "$s" && echo "ok: $s"; done
+
+      - name: Syntax-check e2e scripts (node)
+        run: node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs
 
       - name: ShellCheck
         uses: ludeeus/action-shellcheck@master
