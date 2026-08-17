@@ -37,6 +37,9 @@ jobs:
       - name: Secret scan
         run: python scripts/scan-secrets.py
 
+      - name: Check L2 genesis (skips if not yet generated)
+        run: python scripts/check-l2-genesis.py
+
       - name: Validate deploy-config JSON
         run: |
           for f in packages/contracts-bedrock/deploy-config/*.json; do
