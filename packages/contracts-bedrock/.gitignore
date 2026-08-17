@@ -1,0 +1,7 @@
+# Foundry
+out/
+cache/
+broadcast/*/*/dry-run/
+# Vendored deps are fetched reproducibly (forge install), never committed
+lib/
+node_modules/

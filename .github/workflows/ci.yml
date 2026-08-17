@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  config-and-scripts:
+    name: Validate devnet config & scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Validate devnet/network_params.yaml
+        run: python scripts/validate_network_params.py
+
+      - name: Validate deploy-config JSON
+        run: |
+          for f in packages/contracts-bedrock/deploy-config/*.json; do
+            echo "checking $f"
+            python -c "import json,sys; json.load(open(sys.argv[1]))" "$f"
+          done
+
+      - name: Syntax-check shell scripts
+        run: |
+          for s in scripts/*.sh; do bash -n "$s" && echo "ok: $s"; done
+
+      - name: ShellCheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: ./scripts
+
+  contracts:
+    name: Foundry (contracts-bedrock)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: packages/contracts-bedrock
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install forge-std
+        run: forge install foundry-rs/forge-std
+
+      - name: Check formatting
+        run: forge fmt --check
+
+      - name: Build
+        run: forge build --sizes
+
+      - name: Test
+        run: forge test -vvv
+        env:
+          FOUNDRY_PROFILE: ci
