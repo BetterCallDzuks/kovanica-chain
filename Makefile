@@ -13,6 +13,7 @@ help: ## Show this help
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
 check: ## Run all config validators, secret scan, and script syntax checks (mirrors CI)
+	@echo ">> check-versions"               && python3 scripts/check-versions.py
 	@echo ">> validate_network_params"      && python3 scripts/validate_network_params.py
 	@echo ">> check-config-consistency"     && python3 scripts/check-config-consistency.py
 	@echo ">> validate-sepolia-config (lint)" && python3 scripts/validate-sepolia-config.py

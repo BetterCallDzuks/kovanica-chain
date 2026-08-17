@@ -1,0 +1,10 @@
+{
+  "_comment": "Single source of truth for kovanica-chain's version pins. op-deployer and the op-contracts tag MUST move together (each op-deployer minor release supports one governance-approved contracts release). scripts/check-versions.py enforces that devnet/network_params.yaml matches these. When bumping the contracts tag: re-derive genesis/rollup, REGENERATE the Cannon prestate, and bump op-node/op-geth to the same release line.",
+
+  "op_deployer_image": "us-docker.pkg.dev/oplabs-tools-artifacts/images/op-deployer:v0.4.2",
+  "op_contracts_tag": "tag://op-contracts/v4.0.0",
+
+  "op_node": null,
+  "op_geth": null,
+  "_node_pins_note": "Pin op-node and op-geth (or op-reth on Karst+) to the release line matching op-contracts/v4.0.0 before running nodes against a shared network; left null until confirmed against the release page rather than guessed. Never mix bare v<semver> (Go-only, no contracts) tags with op-contracts/* expectations."
+}
