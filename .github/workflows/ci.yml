@@ -28,6 +28,9 @@ jobs:
       - name: Validate devnet/network_params.yaml
         run: python scripts/validate_network_params.py
 
+      - name: Check config consistency (network_params vs deploy-config)
+        run: python scripts/check-config-consistency.py
+
       - name: Validate deploy-config JSON
         run: |
           for f in packages/contracts-bedrock/deploy-config/*.json; do
