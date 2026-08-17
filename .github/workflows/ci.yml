@@ -64,6 +64,7 @@ jobs:
           node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs
           node --check ops/health/health.mjs
           node --check ops/dispute-mon/dispute-mon.mjs
+          node --check ops/da-check/da-check.mjs
 
       # ShellCheck via apt rather than a third-party action pinned to a mutable
       # branch (supply-chain hardening — see docs/audits/repo-posture-review.md).
@@ -82,6 +83,7 @@ jobs:
           - test/e2e/withdrawal-roundtrip
           - ops/health
           - ops/dispute-mon
+          - ops/da-check
     defaults:
       run:
         working-directory: ${{ matrix.project }}

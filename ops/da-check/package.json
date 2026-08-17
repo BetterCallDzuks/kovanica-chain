@@ -1,0 +1,17 @@
+{
+  "name": "@kovanica-chain/da-check",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Data-availability spot-check: confirms op-batcher is posting retrievable batches to the L1 batch inbox and flags a DA stall.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "start": "node da-check.mjs",
+    "test:unit": "node --test"
+  },
+  "dependencies": {
+    "viem": "2.55.17"
+  }
+}
