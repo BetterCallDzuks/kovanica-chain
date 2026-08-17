@@ -41,11 +41,12 @@ higher than the local devnet.
    prestate, or the devnet chain id). This is the mechanical gate from the
    config audit (`docs/audits/stage2-config-review.md`, finding HIGH):
    ```bash
-   # optional on-chain SAFE (contract) check for owner roles:
    DEPLOYER_ADDRESS=0x<deployer> L1_RPC_URL=$L1_RPC_URL \
-     python scripts/validate-sepolia-config.py --deploy
+     scripts/preflight-sepolia.sh
    ```
-   Do not proceed until it prints `OK (deploy-ready)`.
+   This chains the version-pin check, the strict Sepolia config/custody gate
+   (SAFE owners, `guardian != deployer`, real prestate), and the L2 genesis
+   structure check. Do not proceed until it prints `PREFLIGHT: all gates passed`.
 4. **Apply** — deploys L1 contracts:
    ```bash
    op-deployer apply --workdir .deployer --l1-rpc-url $L1_RPC_URL \
