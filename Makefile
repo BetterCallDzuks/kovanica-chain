@@ -19,7 +19,7 @@ check: ## Run all config validators, secret scan, and script syntax checks (mirr
 	@echo ">> scan-secrets"                  && python3 scripts/scan-secrets.py
 	@echo ">> check-l2-genesis"             && python3 scripts/check-l2-genesis.py
 	@echo ">> shell syntax"                  && for s in scripts/*.sh; do bash -n "$$s"; done && echo "  shell ok"
-	@echo ">> e2e syntax"                    && node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs && echo "  e2e ok"
+	@echo ">> node syntax"                   && node --check test/e2e/withdrawal-roundtrip/roundtrip.mjs && node --check ops/health/health.mjs && node --check ops/dispute-mon/dispute-mon.mjs && echo "  node ok"
 	@echo ">> deploy-config JSON"            && for f in packages/contracts-bedrock/deploy-config/*.json; do python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$$f"; done && echo "  json ok"
 	@echo "All checks passed."
 

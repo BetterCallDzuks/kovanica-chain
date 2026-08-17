@@ -4,6 +4,12 @@
 !.env.example
 *.pem
 *keystore*
+# op-node/op-geth Engine-API JWT and geth-style keystore files
+jwt.txt
+jwtsecret
+*.jwt
+UTC--*
+keystore/
 
 # op-deployer state / downloaded devnet artifacts
 .deployer/
@@ -32,3 +38,6 @@ bin/
 # Python
 __pycache__/
 *.pyc
+
+# Node
+node_modules/
