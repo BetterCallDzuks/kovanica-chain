@@ -34,6 +34,9 @@ jobs:
       - name: Lint Sepolia deploy-config
         run: python scripts/validate-sepolia-config.py
 
+      - name: Secret scan
+        run: python scripts/scan-secrets.py
+
       - name: Validate deploy-config JSON
         run: |
           for f in packages/contracts-bedrock/deploy-config/*.json; do

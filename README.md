@@ -18,7 +18,8 @@ the working memory / tooling that drives development (`.claude/`).
 | `devnet/static_files/prestates/` | Where the op-challenger's Cannon prestate is served from |
 | `packages/contracts-bedrock/` | Foundry package — deploy-config + custom/extension contracts (core OP Stack contracts come from the pinned `op-contracts` tag, not hand-written) |
 | `.github/workflows/ci.yml` | CI — validates the devnet config/scripts and runs `forge fmt`/`build`/`test` |
-| `scripts/` | `devnet-up` / `devnet-inspect` / `devnet-down` wrappers + `validate_network_params.py` |
+| `scripts/` | devnet wrappers, prestate tooling, and validators (`validate_network_params.py`, `check-config-consistency.py`, `validate-sepolia-config.py`, `scan-secrets.py`) |
+| `SECURITY.md` | Secret-handling + key-custody policy |
 | `Makefile` | `make devnet-up`, `devnet-inspect`, `devnet-logs`, `devnet-down` |
 | `deploy/sepolia/` | Stage 2 (Sepolia testnet) op-deployer intent template + deployment runbook |
 | `docs/` | The 2026 fault-proof bootstrapping procedure + project notes (`docs/notes/`) |
